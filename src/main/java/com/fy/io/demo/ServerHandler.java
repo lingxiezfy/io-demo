@@ -7,7 +7,7 @@ import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class ServerHandler implements Runnable {
+public class ServerHandler extends Thread {
     private Socket socket;
 
     public ServerHandler(Socket socket) {

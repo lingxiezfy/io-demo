@@ -13,8 +13,6 @@ public class SecondServer {
     {
         ServerSocket serverSocket = null;//服务端Socket
         BufferedReader reader = null;
-        String inputContent;
-        int count = 0;
         try {
             serverSocket = new ServerSocket(port);
 
@@ -22,7 +20,8 @@ public class SecondServer {
             while(true) {
                 Socket socket = serverSocket.accept();
                 // 针对每一个socket创建一个线程为其处理
-                new Thread(new ServerHandler(socket)).start();
+                ServerHandler handler = new ServerHandler(socket);
+                handler.start();
             }
         } catch (IOException e) {
             e.printStackTrace();
