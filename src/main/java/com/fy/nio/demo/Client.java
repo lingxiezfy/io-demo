@@ -50,7 +50,6 @@ public class Client {
                 public void run() {
                     try {
                         client.send(getName());
-
                         DataInputStream inputStream = new DataInputStream(client.in);
                         int dataLength = inputStream.readInt();
                         byte[] data = new byte[dataLength];

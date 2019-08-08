@@ -60,10 +60,12 @@ public class NIOServer {
 
     private void process(SelectionKey key) throws IOException {
         ByteBuffer buffer = ByteBuffer.allocate(1024);
-        if(key.isAcceptable()){ // OP_ACCEPT
+        if(key.isAcceptable()){
+            // OP_ACCEPT
             // 该key标识 - 可接受一个新的连接
             ServerSocketChannel server = (ServerSocketChannel) key.channel();
-            SocketChannel client = server.accept(); // todo
+            // todo
+            SocketChannel client = server.accept();
             // 客户端连接设置成非阻塞
             client.configureBlocking(false);
             // 客户端连接上来，不直接进行IO操作，而是往Selector上注册号码牌,这里注册的是 OP_READ -- 标识，可以读了

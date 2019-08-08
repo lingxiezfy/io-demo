@@ -1,8 +1,6 @@
 package com.fy.io.demo;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
@@ -11,35 +9,50 @@ import java.util.Date;
 public class BIOServer {
     public void initBIOServer(int port)
     {
-        ServerSocket serverSocket = null;//服务端Socket
-        Socket socket = null;//客户端socket
+        //服务端Socket
+        ServerSocket serverSocket = null;
+        //客户端socket
+        Socket socket = null;
         BufferedReader reader = null;
-        String inputContent;
+        BufferedWriter writer = null;
         try {
             serverSocket = new ServerSocket(port);
             System.out.println(stringNowTime() + ": serverSocket started");
             while(true) {
-                socket = serverSocket.accept(); // 产生阻塞，阻塞主线程
-                System.out.println(stringNowTime() + ": id为" + socket.hashCode()+ "的Clientsocket connected");
-                reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                while ((inputContent = reader.readLine()) != null) {
-                    System.out.println("收到id为" + socket.hashCode() + "  "+inputContent);
+                // 产生阻塞，阻塞主线程
+                socket = serverSocket.accept();
+                System.out.println(stringNowTime() + "Receive ClientSocket:" + socket.hashCode()+ " connected");
+                try {
+                    reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+                    String inputContent;
+                    while ((inputContent = reader.readLine()) != null) {
+                        System.out.println("Receive socket:" + socket.hashCode() + ", " + inputContent);
+                        writer.write("Success\n");
+                        writer.flush();
+                    }
+                    System.out.println("Receive ClientSocket:" + socket.hashCode()+ " - "+stringNowTime()+" - End");
+                }catch (Exception e){
+                    System.out.println("Receive ClientSocket:" + socket.hashCode()+ " - "+stringNowTime()+" - Disconnect");
                 }
-                System.out.println("id为" + socket.hashCode()+ "的Clientsocket "+stringNowTime()+"读取结束");
+
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }finally{
             try {
+                assert reader != null;
+                assert writer != null;
+                assert socket != null;
+                writer.close();
                 reader.close();
                 socket.close();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
-    public String stringNowTime()
-    {
+    private String stringNowTime() {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return format.format(new Date());
     }

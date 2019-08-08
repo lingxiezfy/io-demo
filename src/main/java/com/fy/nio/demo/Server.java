@@ -416,15 +416,15 @@ public class Server {
 
 
     public int channelRead(ReadableByteChannel channel, ByteBuffer buffer) throws IOException {
-        return buffer.remaining() <= NIO_BUFFER_LIMIT ? channel.read(buffer) : channleIO(channel, null, buffer);
+        return buffer.remaining() <= NIO_BUFFER_LIMIT ? channel.read(buffer) : channelIO(channel, null, buffer);
     }
 
     public int channelWrite(WritableByteChannel channel, ByteBuffer buffer) throws IOException {
-        return buffer.remaining() <= NIO_BUFFER_LIMIT ? channel.write(buffer) : channleIO(null, channel, buffer);
+        return buffer.remaining() <= NIO_BUFFER_LIMIT ? channel.write(buffer) : channelIO(null, channel, buffer);
     }
 
 
-    public int channleIO(ReadableByteChannel readCh, WritableByteChannel writeCh, ByteBuffer buffer) throws IOException {
+    public int channelIO(ReadableByteChannel readCh, WritableByteChannel writeCh, ByteBuffer buffer) throws IOException {
         int initRemaining = buffer.remaining();
         int originalLimit = buffer.limit();
 
