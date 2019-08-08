@@ -47,6 +47,7 @@ public class Client {
             new Thread(i+"") {
                 Client client = new Client();
 
+                @Override
                 public void run() {
                     try {
                         client.send(getName());

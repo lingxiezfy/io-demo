@@ -35,13 +35,18 @@ public class NIOServer {
         }
     }
 
-    // Selector轮询
+    /**
+     * Selector轮询
+     */
     public void listen(){
         try {
             while (true){
-                int wait = selector.select();// select 方法是阻塞的
+                // select 方法是阻塞的
+                int wait = selector.select();
+                System.out.println("wait:"+wait);
                 if(wait == 0){continue;}
                 Set<SelectionKey> keys = this.selector.selectedKeys();
+                System.out.println("size:"+keys.size());
                 Iterator<SelectionKey> i = keys.iterator();
                 while (i.hasNext()){
                     // 获取客户端的号码牌
@@ -70,7 +75,7 @@ public class NIOServer {
             client.configureBlocking(false);
             // 客户端连接上来，不直接进行IO操作，而是往Selector上注册号码牌,这里注册的是 OP_READ -- 标识，可以读了
             client.register(selector,SelectionKey.OP_READ);
-            System.out.println(stringNowTime() + ": id为" + client.hashCode()+ "的客户端 connected");
+            System.out.println(stringNowTime() + "Receive ClientSocket:" + client.hashCode()+ " connected");
         }else if(key.isReadable()){
             SocketChannel client = (SocketChannel)key.channel();
             int len = client.read(buffer);
@@ -78,7 +83,7 @@ public class NIOServer {
                 buffer.flip(); // todo
                 String content = new String(buffer.array(),0,len);
                 buffer.clear();
-                System.out.println(content);
+                System.out.print(content);
                 client.register(selector,SelectionKey.OP_WRITE,content);
             }
         }else if(key.isWritable()){

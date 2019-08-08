@@ -61,7 +61,6 @@ public class NIOClient {
                                 int i = 0;
                                 while (i <= 100) {
                                     client.send("Hello Server!"+Thread.currentThread().getName()+":"+i);
-//                                    Thread.sleep(500);
                                     byte[] buffer = new byte[1024];
                                     int len = client.getIn().read(buffer);
                                     if (len > 0) {
