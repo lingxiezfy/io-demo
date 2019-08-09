@@ -58,6 +58,7 @@ public class Server {
         }
 
 
+        @Override
         public void run() {
             while(running) {
                 try {
@@ -258,6 +259,7 @@ public class Server {
             writeSelector = Selector.open();
         }
 
+        @Override
         public void run() {
             while(running) {
                 try {
@@ -293,15 +295,17 @@ public class Server {
                             call.conn.channel.register(writeSelector, SelectionKey.OP_WRITE, call);
                         } catch (ClosedChannelException e) {
                             //the client went away
-                            if (LOG.isTraceEnabled())
+                            if (LOG.isTraceEnabled()) {
                                 LOG.trace("the client went away", e);
+                            }
                         }
                     } else {
                         key.interestOps(SelectionKey.OP_WRITE);
                     }
                 } catch (CancelledKeyException e) {
-                    if (LOG.isTraceEnabled())
+                    if (LOG.isTraceEnabled()) {
                         LOG.trace("the client went away", e);
+                    }
                 }
             }
         }
@@ -362,6 +366,7 @@ public class Server {
             LOG.info("Starting Handler-" + i + "...");
         }
 
+        @Override
         public void run() {
             while(running) {
                 try {

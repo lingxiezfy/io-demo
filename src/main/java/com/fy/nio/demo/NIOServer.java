@@ -77,6 +77,7 @@ public class NIOServer {
             client.register(selector,SelectionKey.OP_READ);
             System.out.println(stringNowTime() + "Receive ClientSocket:" + client.hashCode()+ " connected");
         }else if(key.isReadable()){
+            System.out.println("read something");
             SocketChannel client = (SocketChannel)key.channel();
             int len = client.read(buffer);
             if(len > 0){
@@ -87,6 +88,7 @@ public class NIOServer {
                 client.register(selector,SelectionKey.OP_WRITE,content);
             }
         }else if(key.isWritable()){
+            System.out.println("write something");
             SocketChannel client = (SocketChannel) key.channel();
             buffer.put(("Finish once IO!"+key.attachment()).getBytes());
             buffer.flip();

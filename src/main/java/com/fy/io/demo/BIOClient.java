@@ -31,6 +31,10 @@ public class BIOClient {
                 //将消息发送给服务端
                 writer.write(inputContent);
                 writer.flush();
+//                String content = null;
+//                while ((content = reader.readLine()) != null){
+//
+//                }
                 System.out.println(reader.readLine());
                 count++;
             }
