@@ -263,7 +263,7 @@ public class Server {
         public void run() {
             while(running) {
                 try {
-                    registWriters();
+                    registerWriters();
                     int n = writeSelector.select(1000);
                     if(n == 0) {
                         continue;
@@ -283,7 +283,7 @@ public class Server {
         }
 
 
-        public void registWriters() {
+        public void registerWriters() {
             Iterator<Call> it = responseCalls.iterator();
             while(it.hasNext()) {
                 Call call = it.next();
@@ -385,8 +385,8 @@ public class Server {
             String message = new String(request);
             LOG.info("received mseesage: " + message);
 
-            //each channel write 2MB data for test
-            int dataLength = 2 * 1024 * 1024;
+            //each channel write 64 bytes data for test
+            int dataLength = 64;
             ByteBuffer buffer = ByteBuffer.allocate(4 + dataLength);
 
             buffer.putInt(dataLength);
@@ -400,9 +400,10 @@ public class Server {
 
     public void writeDataForTest(ByteBuffer buffer) {
         int n = buffer.limit() - 4;
-        for(int i = 0; i < n; i++) {
-            buffer.put((byte)0);
+        for(int i = 0; i < n-1; i++) {
+            buffer.put((byte)'x');
         }
+        buffer.put((byte) '\n');
     }
 
 

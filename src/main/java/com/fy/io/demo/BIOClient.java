@@ -11,46 +11,47 @@ import java.util.Date;
 
 public class BIOClient {
     public void initBIOClient(String host, int port) {
-        BufferedReader reader = null;
-        BufferedWriter writer = null;
         BufferedReader input = null;
-        Socket socket = null;
         String inputContent;
-        int count = 0;
         try {
             input = new BufferedReader(new InputStreamReader(System.in));
-            socket = SocketFactory.getDefault().createSocket();
-            socket.setTcpNoDelay(true);
             InetSocketAddress server = new InetSocketAddress(host, port);
-            socket.connect(server);
-            writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             System.out.println("clientSocket started: " + stringNowTime());
             while (((inputContent = input.readLine()) != null)) {
-                inputContent = stringNowTime()+" - MessageID:" + count + ",Content: " + inputContent + "\n";
-                //将消息发送给服务端
-                writer.write(inputContent);
-                writer.flush();
-//                String content = null;
-//                while ((content = reader.readLine()) != null){
-//
-//                }
-                System.out.println(reader.readLine());
-                count++;
+                BufferedReader reader = null;
+                BufferedWriter writer = null;
+                Socket socket = null;
+                try {
+                    socket = SocketFactory.getDefault().createSocket();
+                    socket.connect(server);
+                    System.out.println("New Connection for doing something");
+                    writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+                    reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    //将消息发送给服务端
+                    writer.write(inputContent + "\n");
+                    writer.flush();
+                    socket.shutdownOutput();
+                    String receiveContent;
+                    while ((receiveContent = reader.readLine()) != null) {
+                        System.out.println("Return From Server:"+receiveContent);
+                    }
+                }catch (Exception e){
+                    System.out.println("DisConnect from Server");
+                    e.printStackTrace();
+                }finally {
+                    try {
+                        assert socket != null;
+                        socket.close();
+                        assert reader != null;
+                        reader.close();
+                        writer.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            try {
-                assert socket != null;
-                assert reader != null;
-                socket.close();
-                reader.close();
-                writer.close();
-                input.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 

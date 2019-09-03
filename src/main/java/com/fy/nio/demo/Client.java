@@ -44,7 +44,7 @@ public class Client {
     public static void main(String[] args) throws IOException {
         int n = 200;
         for(int i = 0; i < n; i++) {
-            new Thread(i+"") {
+            new Thread("Client"+i) {
                 Client client = new Client();
 
                 @Override
@@ -56,7 +56,7 @@ public class Client {
                         byte[] data = new byte[dataLength];
                         inputStream.readFully(data);
                         client.socket.close();
-                        LOG.info("receive from server: dataLength=" + data.length);
+                        LOG.info("receive from server: " + new String(data));
                     } catch (Exception e) {
                         LOG.error("", e);
                     }
