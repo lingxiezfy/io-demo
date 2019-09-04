@@ -142,7 +142,7 @@ public class NIOServer {
             client.configureBlocking(false);
             // 客户端连接上来，不直接进行IO操作，而是往Selector上注册号码牌,这里注册的是 OP_READ -- 标识，可以读了
             client.register(selector,SelectionKey.OP_READ);
-            System.out.println(stringNowTime() + "Process：ClientSocket:" + client.hashCode()+ " connected");
+            System.out.println("ClientSocket:" + client.hashCode()+ " connected");
         }else if(key.isReadable()){
             SocketChannel client = (SocketChannel)key.channel();
             Connection conn = key.attachment() == null?new Connection(client):(Connection) key.attachment();

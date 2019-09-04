@@ -20,6 +20,9 @@ public class NIOClient {
     private OutputStream out;
     private InputStream in;
 
+    private static final int PERSON_SIZE = 100;
+    private static final int PRE_TIMES = 100;
+
     public NIOClient(String ip,int port) throws IOException {
         socket = SocketFactory.getDefault().createSocket();
         socket.setTcpNoDelay(true);
@@ -51,7 +54,7 @@ public class NIOClient {
 
     public static void main(String[] args) {
         int j = 0;
-        while (j<= 0) {
+        while (j< PERSON_SIZE) {
             new Thread(
                     new Runnable() {
                         @Override
@@ -59,17 +62,18 @@ public class NIOClient {
                             try {
                                 NIOClient client = new NIOClient("localhost", 8888);
                                 int i = 0;
-                                while (i <= 100) {
+                                while (i < PRE_TIMES) {
+                                    LOG.info("send something to server");
                                     client.send("Hello Server!"+Thread.currentThread().getName()+":"+i);
-                                    byte[] buffer = new byte[1024];
-                                    int len = client.getIn().read(buffer);
-                                    if (len > 0) {
-                                        String data = new String(buffer, 0, len);
-                                        LOG.info("receive from server: " + data);
-                                    }
                                     i++;
                                 }
-                                client.socket.close();
+                                client.socket.shutdownOutput();
+                                byte[] buffer = new byte[1024];
+                                int len;
+                                while ((len = client.getIn().read(buffer)) != -1){
+                                    String data = new String(buffer, 0, len);
+                                    LOG.info("receive from server: " + data);
+                                }
                             } catch (Exception e) {
                                 LOG.error("", e);
                             }
@@ -78,5 +82,7 @@ public class NIOClient {
             ).start();
             j++;
         }
+
+        while (true){}
     }
 }
